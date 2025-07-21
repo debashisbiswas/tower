@@ -1,6 +1,7 @@
 # Tower
 
 A note-taking app, inspired by ideas in incremental/append-only note-taking.
+Mainly written for my own use.
 
 ## Goals
 
@@ -21,6 +22,11 @@ between devices.
     would prefer to use a CLI as the main interface, so I am not sure how much I
     want this or how much it will fit in.
 - Start with the pieces I'll use day-to-day, and expand from there.
+- Sync should be accessible over the public internet with proper auth. This
+sounds like overkill for a personal setup, and I'd usually host these types of
+applications for myself using my own server through Tailscale. However, I will
+use this application at work, and work in a locked-down environment in which I
+can't install Tailscale.
 
 ## Non-goals
 
