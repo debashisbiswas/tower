@@ -10,10 +10,11 @@
 ### TODO Management
 
 - Always update `TODO.md` when starting work on a task
-- Mark tasks as completed immediately when finished
+- Only mark tasks as completed after confirming with the user that the feature is done
 - Add new tasks as they're discovered during implementation
 - Use clear status indicators: Completed, In Progress, Next Up, Future
 - Add implementation notes for context and decisions made
+- Do not use emojis in TODO.md or other project files
 
 ## Project Vision & Architecture
 
@@ -81,6 +82,8 @@
 - Prefer `Bun.file()` over `node:fs` for file operations
 - Import style: ES modules only, prefer named imports
 - Prefer `await` over `.then()` for async operations
+- Omit needless comments - code should be self-explanatory
+- Rely on TypeScript type inference for function return types - avoid explicit return type annotations
 
 ### Technology Constraints
 
@@ -140,6 +143,9 @@ Test-First Development
 - Write tests before implementation when possible
 - Comprehensive coverage for all functionality
 - Isolated test environments to prevent interference
+- If code is not testable, refactor to make it easy to test first, then write the test
+- Avoid mocking internal implementation details - test behavior, not implementation
+- Prefer dependency injection and pure functions over complex mocking
 
 E2E Focus for Sync
 

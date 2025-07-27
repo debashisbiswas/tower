@@ -1,9 +1,7 @@
 import fs from "fs"
-import { Config } from "./config"
 import path from "path"
 
 async function openInEditor(file: string) {
-  // TODO: why doesn't Bun.openInEditor work?
   const editor = process.env.EDITOR || "vi"
   const proc = Bun.spawn([editor, file], {
     stdio: ["inherit", "inherit", "inherit"],
@@ -12,55 +10,70 @@ async function openInEditor(file: string) {
 }
 
 export namespace Note {
-  export async function create() {
-    const newFilePath = path.join(Config.notesDirectory(), `${Date.now()}.txt`)
+  export async function add(content: string, notesDir: string, timestamp?: number) {
+    const noteTimestamp = timestamp ?? Date.now()
+    const filePath = path.join(notesDir, `${noteTimestamp}.txt`)
+    await Bun.file(filePath).write(content)
+    return noteTimestamp.toString()
+  }
+
+  export async function create(
+    notesDir: string,
+    options?: {
+      timestamp?: number
+      editor?: (path: string) => Promise<void>
+    },
+  ) {
+    const timestamp = options?.timestamp ?? Date.now()
+    const editor = options?.editor ?? openInEditor
+    const newFilePath = path.join(notesDir, `${timestamp}.txt`)
 
     const newFile = Bun.file(newFilePath)
-    newFile.write("")
-    await openInEditor(newFilePath)
+    await newFile.write("")
+    await editor(newFilePath)
     const content = await newFile.text()
     const trimmed = content.trim()
 
     if (trimmed === "") {
-      console.log("file empty, deleting...")
       fs.unlinkSync(newFilePath)
+      return { success: false }
     }
+
+    return { success: true, noteId: timestamp.toString() }
   }
 
-  export async function list() {
-    const filePaths = fs.globSync(path.join(Config.notesDirectory(), "*.txt"))
+  export async function listNotes(notesDir: string) {
+    const filePaths = fs.globSync(path.join(notesDir, "*.txt"))
 
-    if (filePaths.length === 0) {
-      console.log("no notes found")
-      return
-    }
-
-    // Sort by timestamp in filename (newest first)
     const sortedPaths = filePaths.sort((a, b) => {
       const aId = parseInt(path.basename(a, ".txt"))
       const bId = parseInt(path.basename(b, ".txt"))
       return bId - aId
     })
 
+    const notes: Array<{ id: string; content: string }> = []
     for (const filePath of sortedPaths) {
       const id = path.basename(filePath, ".txt")
       const content = await Bun.file(filePath).text()
-      const trimmed = content.trim()
-      const firstLine = trimmed.split("\n")[0] || ""
-      const preview = firstLine.slice(0, 80)
-      console.log(`${id}\t${preview}${trimmed.length > 80 ? "..." : ""}`)
+      notes.push({ id, content })
     }
+
+    return notes
   }
 
-  export async function remove(noteId: string) {
-    const noteFilePath = path.join(Config.notesDirectory(), `${noteId}.txt`)
+  export async function remove(noteId: string, notesDir: string) {
+    const noteFilePath = path.join(notesDir, `${noteId}.txt`)
 
     if (!fs.existsSync(noteFilePath)) {
-      console.log(`note ${noteId} not found`)
-      return
+      return { success: false, error: "not_found" }
     }
 
     fs.unlinkSync(noteFilePath)
-    console.log(`deleted note ${noteId}`)
+    return { success: true }
+  }
+
+  export async function search(query: string, notesDir: string) {
+    const notes = await listNotes(notesDir)
+    return notes.filter((note) => note.content.toLowerCase().includes(query.toLowerCase()))
   }
 }

@@ -6,7 +6,8 @@
   "scripts": {
     "format": "prettier packages/ --write",
     "typecheck": "bun --filter='@tower/*' run typecheck",
-    "cli": "bun run packages/cli/src/index.ts"
+    "cli": "bun run packages/cli/src/index.ts",
+    "test": "bun test"
   },
   "workspaces": [
     "packages/*"
