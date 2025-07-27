@@ -1,13 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "tower",
-  "module": "index.ts",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "bun run src/index.ts",
-    "format": "prettier src/ --write"
+    "format": "prettier packages/ --write",
+    "typecheck": "bun --filter='@tower/*' run typecheck",
+    "cli": "bun run packages/cli/src/index.ts"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@types/bun": "latest",
     "prettier": "3.6.2"
@@ -16,7 +19,7 @@
     "typescript": "^5"
   },
   "prettier": {
-    "semi": false,
-    "printWidth": 120
+    "printWidth": 120,
+    "semi": false
   }
 }

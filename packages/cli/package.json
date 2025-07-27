@@ -1,0 +1,7 @@
+{
+  "name": "@tower/cli",
+  "type": "module", 
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

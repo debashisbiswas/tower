@@ -1,0 +1,7 @@
+{
+  "name": "@tower/api",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}
