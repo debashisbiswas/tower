@@ -1,11 +1,16 @@
 # Tower TODO
 
-## Next Up
+## Completed
 
 - Set up minimal Bun test runner
-- Write basic tests for existing CLI commands (new, ls, rm)
-- Add `tower add "content"` command for quick note creation
+- Write comprehensive tests for CLI commands using functional core pattern
+- Refactor Note functions to be testable (pure functions with dependency injection)
+- Add `tower add` command with git-style interface (`tower add` opens editor, `tower add -m "content"` for quick notes)
 - Add `tower search "query"` command for content search
+- Consolidate add/create into unified interface
+
+## Next Up
+
 - Set up basic API server with Hono and health check endpoint
 - Implement server-side auth (TDD) - register, login, JWT tokens
 - Implement client-side auth - store tokens, login/logout commands

@@ -105,11 +105,11 @@
 
 Core Commands
 
-- `tower add "content"` - Create new note with given content
+- `tower add` - Open editor for note creation
+- `tower add -m "content"` - Create new note with given content (git-style)
 - `tower list` / `tower ls` - List recent notes with previews
 - `tower search "query"` - Search notes by content
 - `tower rm <note-id>` - Delete specific note
-- `tower new` - Open editor for longer note creation
 
 Auth Commands
 
@@ -146,6 +146,13 @@ Test-First Development
 - If code is not testable, refactor to make it easy to test first, then write the test
 - Avoid mocking internal implementation details - test behavior, not implementation
 - Prefer dependency injection and pure functions over complex mocking
+
+CLI Architecture Pattern
+
+- Functional core + imperative shell: Core functions return data, CLI handles presentation
+- Pure functions take all dependencies as parameters (notesDir, content, etc.)
+- No global state mutation in tests - pass dependencies explicitly
+- Focus tests on business logic and file operations, skip complex editor interactions
 
 E2E Focus for Sync
 

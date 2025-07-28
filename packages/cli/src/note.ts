@@ -1,45 +1,41 @@
 import fs from "fs"
 import path from "path"
 
-async function openInEditor(file: string) {
+async function waitForEditor(file: string) {
   const editor = process.env.EDITOR || "vi"
   const proc = Bun.spawn([editor, file], {
     stdio: ["inherit", "inherit", "inherit"],
   })
-  await proc.exited
+  return proc.exited
 }
 
 export namespace Note {
-  export async function add(content: string, notesDir: string, timestamp?: number) {
-    const noteTimestamp = timestamp ?? Date.now()
-    const filePath = path.join(notesDir, `${noteTimestamp}.txt`)
-    await Bun.file(filePath).write(content)
-    return noteTimestamp.toString()
-  }
-
-  export async function create(
+  export async function add(
     notesDir: string,
     options?: {
+      content?: string
       timestamp?: number
-      editor?: (path: string) => Promise<void>
     },
   ) {
     const timestamp = options?.timestamp ?? Date.now()
-    const editor = options?.editor ?? openInEditor
-    const newFilePath = path.join(notesDir, `${timestamp}.txt`)
+    const filePath = path.join(notesDir, `${timestamp}.txt`)
 
-    const newFile = Bun.file(newFilePath)
-    await newFile.write("")
-    await editor(newFilePath)
-    const content = await newFile.text()
-    const trimmed = content.trim()
+    if (options?.content) {
+      await Bun.file(filePath).write(options.content)
+      return { success: true, noteId: timestamp.toString() }
+    } else {
+      await Bun.file(filePath).write("")
+      await waitForEditor(filePath)
+      const content = await Bun.file(filePath).text()
+      const trimmed = content.trim()
 
-    if (trimmed === "") {
-      fs.unlinkSync(newFilePath)
-      return { success: false }
+      if (trimmed === "") {
+        fs.unlinkSync(filePath)
+        return { success: false }
+      }
+
+      return { success: true, noteId: timestamp.toString() }
     }
-
-    return { success: true, noteId: timestamp.toString() }
   }
 
   export async function listNotes(notesDir: string) {

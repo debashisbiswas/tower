@@ -2,7 +2,7 @@ import { exit } from "process"
 import { Note } from "./note"
 import { Config } from "./config"
 
-const subcommands = ["new", "add", "ls", "search", "rm", "sync", "auth"]
+const subcommands = ["add", "ls", "search", "rm", "sync", "auth"]
 const subcommand = Bun.argv[2]
 
 if (subcommand === undefined) {
@@ -20,23 +20,28 @@ function formatNotePreview(id: string, content: string) {
 const notesDir = Config.notesDirectory()
 
 switch (subcommand) {
-  case "new":
-    const createResult = await Note.create(notesDir)
-    if (!createResult.success) {
-      console.log("file empty, deleting...")
-    }
-    break
-
   case "add":
-    const content = Bun.argv[3]
+    const messageFlag = Bun.argv[3]
 
-    if (!content) {
-      console.log("content is required")
-      exit(1)
+    if (messageFlag === "-m") {
+      const messageArgs = Bun.argv.slice(4)
+
+      if (messageArgs.length === 0) {
+        console.log("message content is required after -m")
+        exit(1)
+      }
+
+      const content = messageArgs.join(" ")
+      const result = await Note.add(notesDir, { content })
+      if (result.success) {
+        console.log(`created note ${result.noteId}`)
+      }
+    } else {
+      const result = await Note.add(notesDir)
+      if (!result.success) {
+        console.log("file empty, deleting...")
+      }
     }
-
-    const noteId = await Note.add(content, notesDir)
-    console.log(`created note ${noteId}`)
     break
 
   case "ls":
