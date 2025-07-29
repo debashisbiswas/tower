@@ -8,10 +8,10 @@
 - Add `tower add` command with git-style interface (`tower add` opens editor, `tower add -m "content"` for quick notes)
 - Add `tower search "query"` command for content search
 - Consolidate add/create into unified interface
+- Set up basic API server with Hono and health check endpoint
 
 ## Next Up
 
-- Set up basic API server with Hono and health check endpoint
 - Implement server-side auth (TDD) - register, login, JWT tokens
 - Implement client-side auth - store tokens, login/logout commands
 - Basic sync implementation - simple last-write-wins between client and server
