@@ -9,10 +9,10 @@
 - Add `tower search "query"` command for content search
 - Consolidate add/create into unified interface
 - Set up basic API server with Hono and health check endpoint
+- Implement server-side auth (TDD) - register, login, JWT tokens with username/password only
 
 ## Next Up
 
-- Implement server-side auth (TDD) - register, login, JWT tokens
 - Implement client-side auth - store tokens, login/logout commands
 - Basic sync implementation - simple last-write-wins between client and server
 
