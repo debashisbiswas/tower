@@ -1,9 +1,8 @@
 import { test, expect, beforeEach } from "bun:test"
 import { testClient } from "hono/testing"
 import { db } from "./db"
-import app, { generateTokens } from "./index"
+import app from "./index"
 import { users, refreshTokens } from "./db/schema"
-import { eq } from "drizzle-orm"
 
 const client = testClient(app)
 

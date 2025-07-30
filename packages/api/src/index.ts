@@ -9,6 +9,7 @@ import { sign } from "jsonwebtoken"
 import { db } from "./db"
 import { JWT_SECRET } from "./config"
 import { verify } from "jsonwebtoken"
+import { logger } from "hono/logger"
 
 const generateRefreshToken = () => randomUUID()
 
@@ -46,6 +47,7 @@ const authMiddleware = async (c: AuthContext, next: Next) => {
 }
 
 const app = new Hono()
+  .use(logger())
   .get("/health", (c) => {
     return c.json({ status: "ok", timestamp: new Date().toISOString() })
   })
@@ -55,7 +57,7 @@ const app = new Hono()
       "json",
       z.object({
         username: z.string().min(3).max(50),
-        password: z.string().min(6),
+        password: z.string().min(1),
       }),
     ),
     async (c) => {

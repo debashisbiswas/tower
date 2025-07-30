@@ -15,10 +15,14 @@
 - Implement proper refresh token storage with separate table
 - Add logout endpoint for token invalidation
 - Improve time-based testing with dependency injection
+- Implement client-side auth with CLI commands (auth, logout, whoami)
+- Add comprehensive auth tests with proper isolation
+- Create secure token storage in ~/.tower/.auth/tokens.json
+- Add interactive auth flow with password masking
+- Integrate auth system with existing CLI architecture
 
 ## Next Up
 
-- Implement client-side auth - store tokens, login/logout commands
 - Basic sync implementation - simple last-write-wins between client and server
 
 ## Future
