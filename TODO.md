@@ -10,6 +10,11 @@
 - Consolidate add/create into unified interface
 - Set up basic API server with Hono and health check endpoint
 - Implement server-side auth (TDD) - register, login, JWT tokens with username/password only
+- Refactor refresh token system for multi-device support
+- Add comprehensive auth tests (logout, multi-device, token rotation, expired tokens)
+- Implement proper refresh token storage with separate table
+- Add logout endpoint for token invalidation
+- Improve time-based testing with dependency injection
 
 ## Next Up
 

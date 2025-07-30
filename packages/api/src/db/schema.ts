@@ -11,3 +11,15 @@ export const users = sqliteTable("users", {
     .notNull()
     .$defaultFn(() => new Date()),
 })
+
+export const refreshTokens = sqliteTable("refresh_tokens", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  token: text("token").notNull().unique(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+})
